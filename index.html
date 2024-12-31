@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebRTC Audio Chat</title>
+    <style>
+      #app {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+        text-align: center;
+      }
+      button {
+        padding: 1rem 2rem;
+        margin: 1rem;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+      #status {
+        margin: 1rem;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>WebRTC Audio Chat</h1>
+      <div id="status">Ready to connect...</div>
+      <button id="startBtn">Start Recording</button>
+      <button id="stopBtn" disabled>Stop Recording</button>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
