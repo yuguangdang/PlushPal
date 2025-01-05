@@ -20,8 +20,8 @@ A simple web application that demonstrates real-time audio conversation with Ope
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/notedit/openai-webrtc-play.git
-cd openai-webrtc-play
+git clone https://github.com/realtime-ai/openai-realtime-webrtc-demo.git
+cd openai-realtime-webrtc-demo
 ```
 
 2. Install dependencies:
