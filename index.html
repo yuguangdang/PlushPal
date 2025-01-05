@@ -21,6 +21,12 @@
       #status {
         margin: 1rem;
         font-style: italic;
+        max-height: 200px;
+        overflow-y: auto;
+        text-align: left;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
       }
     </style>
   </head>
@@ -28,8 +34,8 @@
     <div id="app">
       <h1>WebRTC Audio Chat</h1>
       <div id="status">Ready to connect...</div>
-      <button id="startBtn">Start Recording</button>
-      <button id="stopBtn" disabled>Stop Recording</button>
+      <button id="startBtn">Start Conversation</button>
+      <button id="stopBtn" disabled>Stop Conversation</button>
     </div>
     <script type="module" src="/src/main.js"></script>
   </body>

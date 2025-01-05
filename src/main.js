@@ -20,6 +20,17 @@ async function init() {
     // 创建 WebRTC 连接
     peerConnection = new RTCPeerConnection();
 
+    // 添加连接状态监听
+    peerConnection.onconnectionstatechange = () => {
+      updateStatus(`Connection state: ${peerConnection.connectionState}`);
+    };
+
+    peerConnection.oniceconnectionstatechange = () => {
+      updateStatus(
+        `ICE connection state: ${peerConnection.iceConnectionState}`
+      );
+    };
+
     // 设置音频元素播放模型返回的音频
     const audioEl = document.createElement("audio");
     audioEl.autoplay = true;
@@ -79,7 +90,8 @@ async function init() {
 }
 
 function updateStatus(message) {
-  statusDiv.textContent = message;
+  const timestamp = new Date().toLocaleTimeString();
+  statusDiv.innerHTML += `<div>[${timestamp}] ${message}</div>`;
   console.log(message);
 }
 
