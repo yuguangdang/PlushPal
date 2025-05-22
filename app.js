@@ -24,7 +24,10 @@ const rl = readline.createInterface({
 // Audio settings
 const SAMPLE_RATE = 48000;
 const AUDIO_DEVICE = 'plughw:1,0'; // WM8960 sound card
-const soundPlayer = player({});
+const soundPlayer = player({
+  player: 'aplay', // Use ALSA's aplay command
+  device: AUDIO_DEVICE // Specify the WM8960 sound card
+});
 
 // Get current directory
 const __filename = fileURLToPath(import.meta.url);
@@ -115,13 +118,29 @@ async function initWebRTC(ephemeralKey) {
     peerConnection.ontrack = (e) => {
       console.log('Received audio track from OpenAI');
       
-      // In a headless environment, we need to save the audio to a file and play it
-      // This is a simplified approach - production would use better audio handling
-      const tempFile = path.join(tempDir, `response-${Date.now()}.wav`);
-      
-      // TODO: This part is tricky - we need to convert the MediaStreamTrack to a file
-      // For now, we'll simulate this with a placeholder
-      console.log('Audio received, would play via aplay');
+      // Create a MediaRecorder to capture the audio data
+      try {
+        // When we get audio from OpenAI, we need to save it to a file and play it
+        const mediaStream = new MediaStream([e.track]);
+        const tempFile = path.join(tempDir, `response-${Date.now()}.wav`);
+        
+        // Play a test sound to verify audio playback is working
+        console.log('Attempting to play audio via aplay...');
+        soundPlayer.play('/usr/share/sounds/alsa/Front_Center.wav', (err) => {
+          if (err) {
+            console.error('Error playing test sound:', err);
+          } else {
+            console.log('Test sound played successfully');
+          }
+        });
+        
+        // TODO: For full implementation, we need to:
+        // 1. Record the audio track to a file
+        // 2. Play the file as it's being recorded or when complete
+        console.log('Audio handling needs further implementation');
+      } catch (error) {
+        console.error('Error handling audio track:', error);
+      }
     };
     
     // Setup data channel
@@ -132,7 +151,7 @@ async function initWebRTC(ephemeralKey) {
       
       // Handle events from OpenAI
       if (event.type === 'audio.chunk') {
-        // We'd handle audio chunks here in a real implementation
+        handleAudioChunk(event);
       }
     });
     
@@ -241,6 +260,33 @@ function stopConversation() {
     console.log('Stopped conversation');
     stopRecording();
     conversationActive = false;
+  }
+}
+
+// Handle audio chunks from OpenAI
+function handleAudioChunk(event) {
+  try {
+    if (event.audio && event.audio.data) {
+      // Decode base64 audio data
+      const audioData = Buffer.from(event.audio.data, 'base64');
+      
+      // Save to temporary file
+      const tempFile = path.join(tempDir, `chunk-${Date.now()}.wav`);
+      fs.writeFileSync(tempFile, audioData);
+      
+      // Play the audio file
+      console.log('Playing audio chunk...');
+      soundPlayer.play(tempFile, (err) => {
+        if (err) {
+          console.error('Error playing audio chunk:', err);
+        } else {
+          // Remove the file after playing
+          fs.unlinkSync(tempFile);
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error handling audio chunk:', error);
   }
 }
 
