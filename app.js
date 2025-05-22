@@ -9,6 +9,9 @@ import record from 'node-record-lpcm16';
 import player from 'play-sound';
 import https from 'https';
 
+// Version indicator to confirm which version is running
+const APP_VERSION = "v0.2.0 - Enhanced mic debugging";
+
 // Extract RTCPeerConnection from wrtc
 const { RTCPeerConnection } = wrtc;
 
@@ -350,6 +353,7 @@ function cleanup() {
 // Main function
 async function main() {
   console.log('Starting PlushPal...');
+  console.log(`Version: ${APP_VERSION}`);
   console.log('Press Ctrl+C to exit');
   
   try {
