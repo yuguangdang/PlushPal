@@ -118,11 +118,9 @@ async function initWebRTC(ephemeralKey) {
     peerConnection.ontrack = (e) => {
       console.log('Received audio track from OpenAI');
       
-      // Create a MediaRecorder to capture the audio data
       try {
-        // When we get audio from OpenAI, we need to save it to a file and play it
-        const mediaStream = new MediaStream([e.track]);
-        const tempFile = path.join(tempDir, `response-${Date.now()}.wav`);
+        // When we get audio from OpenAI, we need to play it
+        // Since MediaStream isn't available in Node.js, we'll rely on the data channel instead
         
         // Play a test sound to verify audio playback is working
         console.log('Attempting to play audio via aplay...');
@@ -134,10 +132,7 @@ async function initWebRTC(ephemeralKey) {
           }
         });
         
-        // TODO: For full implementation, we need to:
-        // 1. Record the audio track to a file
-        // 2. Play the file as it's being recorded or when complete
-        console.log('Audio handling needs further implementation');
+        console.log('Will receive audio chunks via data channel');
       } catch (error) {
         console.error('Error handling audio track:', error);
       }
