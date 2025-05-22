@@ -1,19 +1,17 @@
 {
-  "name": "openai-webrtc-play",
+  "name": "plushpal",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "server": "node server.js",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "node app.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2"
-  },
-  "devDependencies": {
-    "vite": "^5.0.8"
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "wrtc": "^0.4.7",
+    "node-record-lpcm16": "^1.0.1",
+    "play-sound": "^1.1.5"
   }
 }

@@ -1,27 +1,35 @@
-# OpenAI WebRTC Audio Chat
+# PlushPal
 
-A simple web application that demonstrates real-time audio conversation with OpenAI's Realtime API using WebRTC. This application allows users to have voice conversations with OpenAI's language models.
+A headless Node.js application that allows voice conversations with OpenAI's Realtime API using WebRTC on a Raspberry Pi with WM8960 Hi-Fi Sound Card HAT.
 
 ## Features
 
 - Real-time audio streaming using WebRTC
-- Two-way audio communication
-- Simple and intuitive UI
-- Support for both light and dark themes
-- Real-time status updates
+- Two-way audio communication with OpenAI
+- Runs on Raspberry Pi (tested on Pi Zero 2 W)
+- Works with WM8960 Hi-Fi Sound Card HAT
+- Simple CLI control
 
 ## Prerequisites
 
+- Raspberry Pi (Zero 2 W or newer)
+- WM8960 Hi-Fi Sound Card HAT properly configured
 - Node.js (v14 or higher)
 - OpenAI API key with access to Realtime API
-- Modern web browser with WebRTC support
 
-## Setup
+## Hardware Setup
+
+1. Connect the WM8960 Hi-Fi Sound Card HAT to your Raspberry Pi
+2. Ensure the HAT is properly configured with ALSA
+3. Connect a speaker to the HAT's audio output
+4. Connect a microphone to the HAT's audio input
+
+## Software Setup
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/realtime-ai/openai-realtime-webrtc-demo.git
-cd openai-realtime-webrtc-demo
+git clone https://github.com/YOUR-USERNAME/PlushPal.git
+cd PlushPal
 ```
 
 2. Install dependencies:
@@ -31,54 +39,37 @@ npm install
 
 3. Set up your OpenAI API key:
 ```bash
-export OPENAI_API_KEY=your_api_key_here
+echo "OPENAI_API_KEY=your_api_key_here" > .env
 ```
 
 ## Running the Application
 
-1. Start the backend server:
+Start the application:
 ```bash
-npm run server
+npm start
 ```
-
-2. In a new terminal, start the frontend development server:
-```bash
-npm run dev
-```
-
-3. Open your browser and navigate to the URL shown in the terminal (typically http://localhost:5173)
 
 ## Usage
 
-1. When the page loads, it will automatically initialize the WebRTC connection
-2. Click "Start Recording" to begin a conversation
-3. Speak into your microphone
-4. The AI's responses will play through your speakers
-5. Click "Stop Recording" to end the conversation
+1. Press Enter to start a conversation
+2. Speak into the microphone
+3. The AI's responses will play through the speaker
+4. Press Enter again to stop the conversation
+5. Press Ctrl+C to exit the application
 
 ## Technical Details
 
-- Frontend: Vanilla JavaScript with Vite
-- Backend: Node.js with Express
+- Backend: Node.js with WebRTC
+- Audio: ALSA with WM8960 HAT
 - API: OpenAI Realtime API with WebRTC
 - Real-time communication: WebRTC data channels and media streams
 
-## Security Notes
+## Troubleshooting
 
-- The application uses ephemeral API keys for secure client-side connections
-- The main OpenAI API key is only used server-side
-- All communication is handled through secure WebRTC channels
-
-## Development
-
-The project uses Vite for development and building. Available commands:
-
-```bash
-npm run dev      # Start development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run server   # Start backend server
-```
+If you encounter issues with audio:
+1. Check that your WM8960 HAT is properly detected with `aplay -l` and `arecord -l`
+2. Test direct recording/playback with `arecord` and `aplay`
+3. Verify volume levels with `alsamixer -c 1`
 
 ## License
 

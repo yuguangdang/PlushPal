@@ -22,3 +22,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment variables
+.env
+
+# Temporary audio files
+temp/
+*.wav
+*.mp3
+*.pcm
