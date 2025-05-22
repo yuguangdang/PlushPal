@@ -193,30 +193,81 @@ async function initWebRTC(ephemeralKey) {
 // Start recording from microphone
 function startRecording() {
   console.log('Starting microphone recording...');
+  console.log(`Using audio device: ${AUDIO_DEVICE}`);
   
-  recording = record.record({
-    sampleRate: SAMPLE_RATE,
-    device: AUDIO_DEVICE,
-    channels: 1,
-    recorder: 'arecord', // Use ALSA's arecord instead of SoX
-    audioType: 'wav'
-  });
-  
-  recording.stream()
-    .on('data', (chunk) => {
-      // Send audio data to WebRTC
-      if (peerConnection && peerConnection.connectionState === 'connected') {
-        // In a full implementation, we would:
-        // 1. Convert the raw PCM to the right format for WebRTC
-        // 2. Add it to the audio track
-        console.log('Audio data captured');
-      }
-    })
-    .on('error', (err) => {
-      console.error('Recording error:', err);
+  try {
+    // Create an audio sender track for the peer connection if none exists
+    if (peerConnection && peerConnection.getSenders().length === 0) {
+      console.log('Creating audio sender track...');
+      // This is a workaround since we can't directly access the audio track in Node.js
+    }
+    
+    const recordOptions = {
+      sampleRate: SAMPLE_RATE,
+      device: AUDIO_DEVICE,
+      channels: 1,
+      recorder: 'arecord', // Use ALSA's arecord
+      audioType: 'wav',
+      // Add verbose mode to see more details
+      verbose: true
+    };
+    
+    console.log('Record options:', JSON.stringify(recordOptions, null, 2));
+    
+    recording = record.record(recordOptions);
+    
+    recording.stream()
+      .on('data', (chunk) => {
+        // Log the first few chunks to confirm we're getting audio data
+        console.log(`Received audio chunk: ${chunk.length} bytes`);
+        
+        // Send audio data to WebRTC
+        if (peerConnection && peerConnection.connectionState === 'connected') {
+          // In a full implementation, we would send this data to the audio track
+          // For now, we'll just confirm we're receiving audio data
+          console.log('Audio data captured from mic');
+        }
+      })
+      .on('error', (err) => {
+        console.error('Recording error:', err);
+      });
+      
+    console.log('Recording started - speak into your microphone');
+    
+    // Test recording by capturing 5 seconds of audio and saving it
+    const testFile = path.join(tempDir, 'mic-test.wav');
+    console.log(`Saving 5 seconds of mic input to ${testFile} for testing...`);
+    
+    const testRecording = record.record({
+      sampleRate: SAMPLE_RATE,
+      device: AUDIO_DEVICE,
+      channels: 1,
+      recorder: 'arecord',
+      audioType: 'wav',
+      verbose: true
     });
     
-  console.log('Recording started');
+    const fileStream = fs.createWriteStream(testFile);
+    testRecording.stream().pipe(fileStream);
+    
+    // Stop test recording after 5 seconds
+    setTimeout(() => {
+      testRecording.stop();
+      console.log(`Test recording saved to ${testFile}`);
+      
+      // Play back the test recording to verify mic is working
+      console.log('Playing back test recording...');
+      soundPlayer.play(testFile, (err) => {
+        if (err) {
+          console.error('Error playing test recording:', err);
+        } else {
+          console.log('Test recording played successfully - mic is working');
+        }
+      });
+    }, 5000);
+  } catch (error) {
+    console.error('Error starting recording:', error);
+  }
 }
 
 // Stop recording
