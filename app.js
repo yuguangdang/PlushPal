@@ -183,7 +183,9 @@ function startRecording() {
   recording = record.record({
     sampleRate: SAMPLE_RATE,
     device: AUDIO_DEVICE,
-    channels: 1
+    channels: 1,
+    recorder: 'arecord', // Use ALSA's arecord instead of SoX
+    audioType: 'wav'
   });
   
   recording.stream()
