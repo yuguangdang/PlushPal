@@ -4,10 +4,13 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline';
-import { RTCPeerConnection } from 'wrtc';
+import wrtc from 'wrtc';
 import record from 'node-record-lpcm16';
 import player from 'play-sound';
 import https from 'https';
+
+// Extract RTCPeerConnection from wrtc
+const { RTCPeerConnection } = wrtc;
 
 // Load environment variables
 dotenv.config();
